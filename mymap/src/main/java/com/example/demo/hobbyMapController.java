@@ -133,7 +133,7 @@ public class hobbyMapController {
 		// マップIDから住所を取得
 		String mapaddress = service.getmapaddressId(mapid);
 		// クチコミ情報を取得
-		List<kutikomi> kutikomiList = service.kutikomiAll();
+		List<kutikomi> kutikomiList = service.kutikomipart(mapid);
 		mav.addObject("kutikomiList",kutikomiList);
 		// 新規クチコミ用の領域を準備
 		kutikomi newkutikomi = new kutikomi();
@@ -162,7 +162,7 @@ public class hobbyMapController {
 		// マップIDから住所を取得
 		String mapaddress = service.getmapaddressId(mapid);
 		// クチコミ情報を取得
-		List<kutikomi> kutikomiList = service.kutikomiAll();
+		List<kutikomi> kutikomiList = service.kutikomipart(mapid);
 		mav.addObject("kutikomiList",kutikomiList);
 		// 新規クチコミ用の領域を準備
 		kutikomi newkutikomi = new kutikomi();

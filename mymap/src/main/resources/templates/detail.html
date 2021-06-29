@@ -40,11 +40,11 @@
       </h1>
     </div>
     <div class="mapsearch">
-      <form class="searchForm" method="get">
-        <input type="text" placeholder="キーワード">
-        <a href=""><img src="./images/searchicon.png" alt=""></a>
-      </form>
-    </div>
+      		<form class="searchForm" name="searchForm" method="get" th:action="@{/search}">
+        		<input type="text" name="searchtext" th:value="${searchtext}" placeholder="キーワード">
+        		<a href="javascript:searchForm.submit()"><img th:src="@{/images/searchicon.png}" alt=""></a>
+      		</form>
+    	</div>
     <div id="mapcontainer"></div>
     <div class="detaildata" th:object="${mapdataDetail}">
       <div class="detailtitle">
