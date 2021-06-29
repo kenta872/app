@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" />
+  <link th:href="@{/css/style.css}" rel="stylesheet" type="text/css">
+  <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
+  <script src="https://cdn.geolonia.com/community-geocoder.js"></script>
+  <script th:inline="javascript">
+      var maps;
+      function init() {
+	      maps = L.map('mapcontainer', { zoomControl: false });
+          for (const elem of /*[[${geoinfoList}]]*/) {
+	          let geodata = elem.split(',');
+	          maps.setView([geodata[0],geodata[1]], 12);
+              // マーカー設定
+          	  L.marker([geodata[0],geodata[1]]).bindPopup('<b>' + geodata[2] +'</b><br/><a href="" th:href="@{/add}">詳細ページへ</a>').addTo(maps);
+          }
+		  L.tileLayer('https://cyberjapandata.gsi.go.jp/x	yz/std/{z}/{x}/{y}.png', {
+	          attribution: "<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>地理院タイル</a>"
+	      }).addTo(maps);
+	      //スケールコントロールを最大幅200px、右下、m単位で地図に追加
+	      L.control.scale({ maxWidth: 200, position: 'bottomright', imperial: false }).addTo(maps);
+	      //ズームコントロールを左下で地図に追加
+	      L.control.zoom({ position: 'bottomleft' }).addTo(maps);
+       }
+  </script>
+  <title>Document</title>
+</head>
+<body onload="init()">
+	<main>
+		<div class="title">
+    		<h1>
+        		<div class="titleimg">
+          			<img th:src="@{/images/title.png}" alt="">
+        		</div>
+      		</h1>
+    	</div>
+    	<div class="mapsearch">
+      		<form class="searchForm" name="searchForm" method="get" th:action="@{/search}">
+        		<input type="text" name="searchtext" th:value="${searchtext}" placeholder="キーワード">
+        		<a href="javascript:searchForm.submit()"><img th:src="@{/images/searchicon.png}" alt=""></a>
+      		</form>
+    	</div>
+    	<div id="mapcontainer"></div>
+    	<div class="searchResults">
+    		<div class="searchResult" th:each="obj:${maplist}">
+        		<form method="get" th:action="@{/detail}"  name="mapform">
+          			<div class="result_text">
+          				<p th:text="${obj.mapname}"></p>
+            			<p th:text="${obj.address}"></p>
+          			</div>
+          			<div class="result_link">
+          				<input type="image" th:src="@{/images/resulticon.png}" alt="詳細確認">
+         			</div>
+         			<input type="hidden" name="mapid" th:value="${obj.mapid}"/>
+        		</form>
+      		</div>
+      		<div class="searchResult addmap">
+        		<div class="plus">
+          			<a href="" th:href="@{/add}">
+            			<img th:src="@{/images/plusicon.png}" alt="">
+          			</a>
+        		</div>
+      		</div>
+    	</div>
+	</main>
+</body>
+</html>
+
+
+

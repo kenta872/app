@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" />
+  <link th:href="@{/css/style.css}" rel="stylesheet" type="text/css">
+  <script type="text/javascript" th:src="@{/js/jquery-3.5.1.min.js}"></script>
+  <script type="text/javascript" th:src="@{/js/script.js}"></script>
+  <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
+  <script src="https://cdn.geolonia.com/community-geocoder.js"></script>
+  <script th:inline="javascript">
+      var maps;
+      function init() {
+	      maps = L.map('mapcontainer', { zoomControl: false });
+	      var getinfo = /*[[${getinfo}]]*/;
+	      let geodata = getinfo.split(',');
+          maps.setView([geodata[0],geodata[1]], 12);
+          // マーカー設定
+          L.marker([geodata[0],geodata[1]]).addTo(maps);
+		  L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png', {
+	          attribution: "<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>地理院タイル</a>"
+	      }).addTo(maps);
+	      //スケールコントロールを最大幅200px、右下、m単位で地図に追加
+	      L.control.scale({ maxWidth: 200, position: 'bottomright', imperial: false }).addTo(maps);
+	      //ズームコントロールを左下で地図に追加
+	      L.control.zoom({ position: 'bottomleft' }).addTo(maps);
+       }
+  </script>
+  <title>Document</title>
+</head>
+<body onload="init()">
+  <main>
+    <div class="title">
+      <h1>
+        <div class="titleimg">
+          <img src="./images/title.png" alt="">
+        </div>
+      </h1>
+    </div>
+    <div class="mapsearch">
+      <form class="searchForm" method="get">
+        <input type="text" placeholder="キーワード">
+        <a href=""><img src="./images/searchicon.png" alt=""></a>
+      </form>
+    </div>
+    <div id="mapcontainer"></div>
+    <div class="detaildata" th:object="${mapdataDetail}">
+      <div class="detailtitle">
+        <h3 th:text="*{mapname}"></h3>
+        <p th:text="*{address}"></p>
+      </div>
+      <div class="detailmessage">
+        <p th:text="*{descript}"></p>
+      </div>
+    </div>
+    <div class="kutikomi">
+      <div class="kutikomi_title">
+        <h2>クチコミ</h2>
+      </div>
+      <div class="kutikomi_contents" th:object="${formkutikomi}">
+        <form method="post" th:action="@{/kutikomi}" th:object="${formkutikomi}" name="kutikomi">
+          <div class="kutikomi_user">
+            <p>くちこみゆーざー</p>
+            <input type="text" placeholder="おなまえ"  name="kutikomiuser" th:value="*{kutikomiuser}">
+          </div>
+          <div class="kutikomi_text">
+            <p>投稿内容</p>
+            <textarea name="contents" th:value="*{contents}" id=""rows="4"></textarea>
+          </div>
+          <input type="hidden" name="mapid" th:value="${mapdataDetail.mapid}"/>
+          <div class="kutikomi_submit">
+            <input type="submit" value="投稿">
+          </div>
+        </form>
+      </div>
+      <div class="kutikomi_slidebtn">
+        <input id="kutikomi_open_id" type="checkbox">
+        <label class="kutikomi_open_label" for="kutikomi_open_id">
+          一覧を表示
+        </label>
+      </div>
+      <div class="kutikomi_lists" th:each="kutikomiobj:${kutikomiList}">
+        <div class="kutikomi_list">
+          <p th:text="${kutikomiobj.kutikomiuser}"></p>
+          <p th:text="${kutikomiobj.contents}"></p>
+        </div>
+      </div>
+    </div>
+    <div class="homebtn">
+      <a href="" th:href="@{/}">ホームへ戻る</a>
+    </div>
+  </main>
+</body>
+</body>
+</html>
