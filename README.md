@@ -1,4 +1,4 @@
 # app
 言語：SpringBoot
-データバース：postgresql
+データベース：postgresql
 環境：heroku(Paas)
